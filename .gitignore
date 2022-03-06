@@ -1,0 +1,15 @@
+# IDE
+*.vscode
+*.code-workspace
+
+# Executables
+*.exe
+
+# Object files
+*.o
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
