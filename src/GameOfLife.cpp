@@ -33,8 +33,6 @@ void GameOfLife::handleCursor() {
 }
 
 void GameOfLife::drawWorld() {
-    olc::vf2d sp, ep;
-
      // Get visible world
     olc::vf2d worldTopLeft, worldBottomRight;
     worldTopLeft = tv.ScreenToWorld({ 0, 0 });
@@ -49,25 +47,18 @@ void GameOfLife::drawWorld() {
     // Draw grid dots of world
     for (float x = worldTopLeft.x; x < worldBottomRight.x; x += grid) {
         for (float y = worldTopLeft.y; y < worldBottomRight.y; y += grid) {
-            sp = tv.WorldToScreen({ x, y });
-            Draw(sp.x, sp.y, olc::BLUE);
+            tv.Draw({ x, y }, olc::BLUE);
         }
     }
 
     // Draw world axis
-    sp = tv.WorldToScreen({ 0, worldTopLeft.y });
-    ep = tv.WorldToScreen({ 0, worldBottomRight.y });
-    DrawLine(sp.x, sp.y, ep.x, ep.y, olc::GREY, 0xF0F0F0F0);
-    sp = tv.WorldToScreen({ worldTopLeft.x, 0 });
-    ep = tv.WorldToScreen({ worldBottomRight.x, 0 });
-    DrawLine(sp.x, sp.y, ep.x, ep.y, olc::GREY, 0xF0F0F0F0);
+    tv.DrawLine({ 0, worldTopLeft.y }, { 0, worldBottomRight.y }, olc::GREY, 0xF0F0F0F0);
+    tv.DrawLine({ worldTopLeft.x, 0 }, { worldBottomRight.x, 0 }, olc::GREY, 0xF0F0F0F0);
 }
 
 void GameOfLife::drawCursor() {
     // Draw temp cell placement
-    olc::vf2d sp;
-    sp = tv.WorldToScreen(cursor);
-    FillRect(sp, tv.GetWorldScale(), { 255, 51, 255 });
+    tv.FillRect(cursor, { grid, grid }, { 255, 51, 255 });
 
     // Draw cursor string position
     DrawString(10, 10, "X=" + std::to_string(cursor.x) + ", Y=" + std::to_string(cursor.y), olc::YELLOW, 2);
