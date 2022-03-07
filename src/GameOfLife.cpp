@@ -1,7 +1,7 @@
 #include "GameOfLife.h"
 
 olc::TransformedView GameOfLife::tv;
-olc::vf2d GameOfLife::cursor = { 0, 0 };
+olc::vf2d GameOfLife::cursor;
 
 GameOfLife::GameOfLife() {
     sAppName = "Game Of Life";
