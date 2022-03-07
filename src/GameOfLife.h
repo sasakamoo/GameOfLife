@@ -14,8 +14,6 @@ private:
     // Pan and zoom variables
     static olc::TransformedView tv;
     olc::vf2d cursor;
-
-    // Grid square every 1.0f in world space
     float grid = 1.0f;
 
     // List of cells existing in the world
