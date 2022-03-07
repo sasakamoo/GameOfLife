@@ -1,4 +1,5 @@
 #include "pge/olcPixelGameEngine.h"
+#include "pge/olcPGEX_TransformedView.h"
 
 struct Cell {
     // Position in World Space
