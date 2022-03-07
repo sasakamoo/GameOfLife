@@ -1,7 +1,6 @@
 #include "GameOfLife.h"
 
 olc::TransformedView GameOfLife::tv;
-olc::vf2d GameOfLife::cursor;
 
 GameOfLife::GameOfLife() {
     sAppName = "Game Of Life";
@@ -23,13 +22,12 @@ void GameOfLife::handlePanAndZoom() {
 
 void GameOfLife::handleCursor() {
     // Get mouse world position
-    olc::vf2d mouseScreen, mouseWorld;
-    mouseScreen = { (float) GetMouseX(), (float) GetMouseY() };
-    mouseWorld = tv.ScreenToWorld(mouseScreen);
-
+    olc::vf2d mouseWorldPosition;
+    mouseWorldPosition = tv.ScreenToWorld({ (float) GetMouseX(), (float) GetMouseY() });
+    
     // snap cursor to grid position
-    cursor.x = floorf((mouseWorld.x) * grid);
-    cursor.y = floorf((mouseWorld.y) * grid);
+    cursor.x = floorf((mouseWorldPosition.x) * grid);
+    cursor.y = floorf((mouseWorldPosition.y) * grid);
 }
 
 void GameOfLife::drawWorld() {
