@@ -12,14 +12,17 @@ public:
 
 private:
     // Pan and zoom variables
-    olc::TransformedView tv;
-    olc::vf2d cursor;
+    static olc::TransformedView tv;
+    static olc::vf2d cursor;
 
     // Grid square every 1.0f in world space
     float grid = 1.0f;
 
     // List of cells existing in the world
     std::list<Cell*> cells;
+
+    void handlePanAndZoom();
+    void handleCursor();
 
     // Draw functions
     void drawWorld();

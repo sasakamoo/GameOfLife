@@ -1,15 +1,40 @@
 #include "GameOfLife.h"
 
-// If you make these static figure this out
-//olc::TransformedView GameOfLife::tv;
-//olc::vf2d GameOfLife::cursor;
+olc::TransformedView GameOfLife::tv;
+olc::vf2d GameOfLife::cursor = { 0, 0 };
 
 GameOfLife::GameOfLife() {
     sAppName = "Game Of Life";
 }
 
+void GameOfLife::handlePanAndZoom() {
+    // Get mouse position
+    const olc::vi2d mouse = GetMousePos();
+
+    // Handle pan
+    if (GetMouse(2).bPressed || GetKey(olc::Key::SPACE).bPressed) tv.StartPan(mouse);
+    if (GetMouse(2).bHeld || GetKey(olc::Key::SPACE).bHeld) tv.UpdatePan(mouse);
+    if (GetMouse(2).bReleased || GetKey(olc::Key::SPACE).bReleased) tv.EndPan(mouse);
+    
+    // Handle zoom
+    if (GetMouseWheel() > 0) tv.ZoomAtScreenPos(1.1f, mouse);
+    if (GetMouseWheel() < 0) tv.ZoomAtScreenPos(0.9f, mouse);
+}
+
+void GameOfLife::handleCursor() {
+    // Get mouse world position
+    olc::vf2d mouseScreen, mouseWorld;
+    mouseScreen = { (float) GetMouseX(), (float) GetMouseY() };
+    mouseWorld = tv.ScreenToWorld(mouseScreen);
+
+    // snap cursor to grid position
+    cursor.x = floorf((mouseWorld.x) * grid);
+    cursor.y = floorf((mouseWorld.y) * grid);
+}
+
 void GameOfLife::drawWorld() {
     olc::vf2d sp, ep;
+
      // Get visible world
     olc::vf2d worldTopLeft, worldBottomRight;
     worldTopLeft = tv.ScreenToWorld({ 0, 0 });
@@ -49,22 +74,21 @@ void GameOfLife::drawCursor() {
 }
 
 bool GameOfLife::OnUserCreate() {
-    tv.Initialise({ ScreenWidth(), ScreenHeight() }, { 10.0f, 10.0f });
-    tv.SetWorldOffset({ (float) -ScreenWidth() / 2, (float) -ScreenHeight() / 2 });
+    tv.Initialise({ ScreenWidth(), ScreenHeight() });
+    tv.SetZoom(10.0f, { 0, 0 });
+    olc::vf2d screenWorldSize = tv.ScreenToWorld({ (float) ScreenWidth(), (float) ScreenHeight() });
+    tv.SetWorldOffset(-screenWorldSize/2);
     return true;
 }
 
 bool GameOfLife::OnUserUpdate(float fElapsedTime) {
     // Handle pan and zoom
-    tv.HandlePanAndZoom();
+    handlePanAndZoom();
+    handleCursor();
 
     // Start drawing
     Clear(olc::BLACK);
-
-    // Draw world
     drawWorld();
-
-    // Draw cursor
     drawCursor();
 
     return true;
