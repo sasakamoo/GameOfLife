@@ -3,7 +3,7 @@
 
 struct Cell {
     // Position in World Space
-    olc::vf2d pos;
+    olc::vf2d position;
 };
 
 class GameOfLife : public olc::PixelGameEngine {
