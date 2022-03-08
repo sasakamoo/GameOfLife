@@ -4,6 +4,9 @@
 struct Cell {
     // Position in World Space
     olc::vf2d position;
+    int neighbors;
+
+    Cell(olc::vf2d pos);
 };
 
 class GameOfLife : public olc::PixelGameEngine {
@@ -17,14 +20,16 @@ private:
     float grid = 1.0f;
 
     // List of cells existing in the world
-    std::list<Cell*> cells;
+    std::list<Cell> cells;
 
     void handlePanAndZoom();
     void handleCursor();
+    void handleCellInput();
 
     // Draw functions
     void drawWorld();
     void drawCursor();
+    void drawCells();
 
 public:
     bool OnUserCreate() override;

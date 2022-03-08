@@ -1,5 +1,10 @@
 #include "GameOfLife.h"
 
+Cell::Cell(olc::vf2d pos) {
+    position = pos;
+    neighbors = 0;
+}
+
 olc::TransformedView GameOfLife::tv;
 
 GameOfLife::GameOfLife() {
@@ -29,6 +34,27 @@ void GameOfLife::handleCursor() {
     cursor.y = floorf((mouseWorldPosition.y) * grid);
 }
 
+void GameOfLife::handleCellInput() {
+    if (GetKey(olc::Key::A).bPressed || GetKey(olc::Key::A).bHeld) {
+        // Create temporary cell at mouse position
+        bool exists = false;
+        Cell temp(cursor);
+
+        // Check if cell already exists at cursor position
+        for (Cell cell : cells) {
+            if ((cell.position - temp.position).mag() < 0.1) {
+                // Cell already exists
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            cells.push_back(temp);
+        }
+    }
+}
+
 void GameOfLife::drawWorld() {
     // Get visible world to just beyond screen boundaries
     const olc::vf2d worldTopLeft = tv.ScreenToWorld({ 0, 0 }).floor();
@@ -54,6 +80,13 @@ void GameOfLife::drawCursor() {
     DrawString(10, 10, "X=" + std::to_string(cursor.x) + ", Y=" + std::to_string(-cursor.y), olc::YELLOW, 2);
 }
 
+void GameOfLife::drawCells() {
+    // Draw cells
+    for (Cell cell : cells) {
+        tv.FillRect(cell.position, { grid, grid });
+    }
+}
+
 bool GameOfLife::OnUserCreate() {
     tv.Initialise({ ScreenWidth(), ScreenHeight() });
     tv.SetZoom(10.0f, { 0, 0 });
@@ -66,10 +99,12 @@ bool GameOfLife::OnUserUpdate(float fElapsedTime) {
     // Handle pan and zoom
     handlePanAndZoom();
     handleCursor();
+    handleCellInput();
 
     // Start drawing
     Clear(olc::BLACK);
     drawWorld();
+    drawCells();
     drawCursor();
 
     return true;
