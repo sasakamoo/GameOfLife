@@ -22,8 +22,7 @@ void GameOfLife::handlePanAndZoom() {
 
 void GameOfLife::handleCursor() {
     // Get mouse world position
-    olc::vf2d mouseWorldPosition;
-    mouseWorldPosition = tv.ScreenToWorld({ (float) GetMouseX(), (float) GetMouseY() });
+    const olc::vf2d mouseWorldPosition = tv.ScreenToWorld({ (float) GetMouseX(), (float) GetMouseY() });
     
     // snap cursor to grid position
     cursor.x = floorf((mouseWorldPosition.x) * grid);
@@ -31,16 +30,9 @@ void GameOfLife::handleCursor() {
 }
 
 void GameOfLife::drawWorld() {
-     // Get visible world
-    olc::vf2d worldTopLeft, worldBottomRight;
-    worldTopLeft = tv.ScreenToWorld({ 0, 0 });
-    worldBottomRight = tv.ScreenToWorld({ (float) ScreenWidth(), (float) ScreenHeight() });
-
-    // Set values to just beyond screen boundaries
-    worldTopLeft.x = floorf(worldTopLeft.x);
-    worldTopLeft.y = floorf(worldTopLeft.y);
-    worldBottomRight.x = ceilf(worldBottomRight.x);
-    worldBottomRight.y = ceilf(worldBottomRight.y);
+    // Get visible world to just beyond screen boundaries
+    const olc::vf2d worldTopLeft = tv.ScreenToWorld({ 0, 0 }).floor();
+    const olc::vf2d worldBottomRight = tv.ScreenToWorld({ (float) ScreenWidth(), (float) ScreenHeight() }).ceil();
 
     // Draw grid dots of world
     for (float x = worldTopLeft.x; x < worldBottomRight.x; x += grid) {
@@ -59,7 +51,7 @@ void GameOfLife::drawCursor() {
     tv.FillRect(cursor, { grid, grid }, { 255, 51, 255 });
 
     // Draw cursor string position
-    DrawString(10, 10, "X=" + std::to_string(cursor.x) + ", Y=" + std::to_string(cursor.y), olc::YELLOW, 2);
+    DrawString(10, 10, "X=" + std::to_string(cursor.x) + ", Y=" + std::to_string(-cursor.y), olc::YELLOW, 2);
 }
 
 bool GameOfLife::OnUserCreate() {
