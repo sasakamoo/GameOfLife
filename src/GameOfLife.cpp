@@ -2,7 +2,6 @@
 
 Cell::Cell(olc::vf2d pos) {
     position = pos;
-    neighbors = 0;
 }
 
 olc::TransformedView GameOfLife::tv;
@@ -37,6 +36,7 @@ void GameOfLife::handleCursor() {
 void GameOfLife::handleCellInput() {
     if (GetKey(olc::Key::A).bPressed || GetKey(olc::Key::A).bHeld) {
         // Create temporary cell at mouse position
+        // and assume the cell doesn't already exist
         bool exists = false;
         Cell temp(cursor);
 
