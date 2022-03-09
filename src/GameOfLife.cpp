@@ -10,7 +10,7 @@ GameOfLife::GameOfLife() {
     sAppName = "Game Of Life";
 }
 
-void GameOfLife::handlePanAndZoom() {
+void GameOfLife::handlePan() {
     // Get mouse position
     const olc::vi2d mouse = GetMousePos();
 
@@ -19,9 +19,9 @@ void GameOfLife::handlePanAndZoom() {
     if (GetMouse(2).bHeld || GetKey(olc::Key::SPACE).bHeld) tv.UpdatePan(mouse);
     if (GetMouse(2).bReleased || GetKey(olc::Key::SPACE).bReleased) tv.EndPan(mouse);
     
-    // Handle zoom
-    if (GetMouseWheel() > 0) tv.ZoomAtScreenPos(1.1f, mouse);
-    if (GetMouseWheel() < 0) tv.ZoomAtScreenPos(0.9f, mouse);
+    // // Handle zoom
+    // if (GetMouseWheel() > 0) tv.ZoomAtScreenPos(1.1f, mouse);
+    // if (GetMouseWheel() < 0) tv.ZoomAtScreenPos(0.9f, mouse);
 }
 
 void GameOfLife::handleCursor() {
@@ -29,8 +29,7 @@ void GameOfLife::handleCursor() {
     const olc::vf2d mouseWorldPosition = tv.ScreenToWorld({ (float) GetMouseX(), (float) GetMouseY() });
     
     // snap cursor to grid position
-    cursor.x = floorf((mouseWorldPosition.x) * grid);
-    cursor.y = floorf((mouseWorldPosition.y) * grid);
+    cursor = mouseWorldPosition.floor() * grid;
 }
 
 void GameOfLife::handleCellInput() {
@@ -97,7 +96,7 @@ bool GameOfLife::OnUserCreate() {
 
 bool GameOfLife::OnUserUpdate(float fElapsedTime) {
     // Handle pan and zoom
-    handlePanAndZoom();
+    handlePan();
     handleCursor();
     handleCellInput();
 

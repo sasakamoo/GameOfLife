@@ -22,7 +22,7 @@ private:
     // List of cells existing in the world
     std::list<Cell> cells;
 
-    void handlePanAndZoom();
+    void handlePan();
     void handleCursor();
     void handleCellInput();
 
